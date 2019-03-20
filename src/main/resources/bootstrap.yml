@@ -1,0 +1,17 @@
+#SERVER CONFIGURATION
+server: 
+   port: ${PORT:5998}
+   servlet:
+      application-display-name: sampleTest
+      
+#SPRING CONFIGURATION
+spring:
+   application:
+      name: sampleTest
+   profiles:
+      active: local
+   cloud:
+      config:
+         #http://localhost:5001/sampleTest/local
+         uri: http://localhost:5001
+         name: sampleTest
