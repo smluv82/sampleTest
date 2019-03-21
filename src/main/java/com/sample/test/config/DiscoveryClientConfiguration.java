@@ -4,6 +4,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -24,11 +25,15 @@ import org.springframework.web.client.RestTemplate;
 @EnableDiscoveryClient
 @Configuration
 public class DiscoveryClientConfiguration {
-
 	@Bean(name="ribbonRestTemplate")
 	@LoadBalanced
 	public RestTemplate restTemplate() {
-		return new RestTemplate();
+		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+		factory.setConnectTimeout(5000);
+		factory.setReadTimeout(5000);
+		RestTemplate restTemplate =  new RestTemplate(factory);
+		return restTemplate;
+//		return new RestTemplate();
 	}
 
 }

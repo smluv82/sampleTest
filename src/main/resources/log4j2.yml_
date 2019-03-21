@@ -1,0 +1,72 @@
+Configuration:
+   Properties:
+      Property:
+         -  name: LOG_FORMAT
+            value: "%d{yyyyMMdd HH:mm:ss.SSS} [%thread][%method:%line] %-5level %logger{36} - %msg %n"
+         -  name: BASE_DIR
+            value: ./logs
+         
+   Appenders:
+      Console:
+         name: STDOUT
+         target: SYSTEM_OUT
+         follow: true
+         PatternLayout:
+            pattern: ${LOG_FORMAT}
+            
+      RollingFile:
+         name: FILE
+         fileName: ${BASE_DIR}/sampleTestYml.log
+         filePattern: ${BASE_DIR}/sampleTestYml.%d{yyyy-MM-dd}_%i.log
+         PatternLayout:
+            pattern: ${LOG_FORMAT}
+         Policies:
+            SizeBasedTriggeringPolicy:
+               size: 0.1 MB
+            TimeBasedTriggeringPolicy:
+               interval: 1
+               modulate: true
+         DefaultRolloverStrategy:
+            max: 30
+            Delete:
+               basePath: ${BASE_DIR}
+               IfFileName:
+                  glob: "*.log"
+               IfLastModified:
+                  age: 30d
+                  
+      RollingFile:
+         name: ERROR_FILE
+         fileName: ${BASE_DIR}/sampleTestYml-error.log
+         filePattern: ${BASE_DIR}/sampleTestYml-error.%d{yyyy-MM-dd}_%i.log
+         PatternLayout:
+            pattern: ${LOG_FORMAT}
+         Policies:
+            SizeBasedTriggeringPolicy:
+               size: 0.1 MB
+            TimeBasedTriggeringPolicy:
+               interval: 1
+               modulate: true
+         DefaultRolloverStrategy:
+            max: 30
+            Delete:
+               basePath: ${BASE_DIR}
+               IfFileName:
+                  glob: "*.log"
+               IfLastModified:
+                  age: 30d
+         ThresholdFilter:
+            level: ERROR
+            onMatch: ACCEPT
+            onMisMatch: DENY
+            
+   Loggers:
+      Root:
+         level: info
+         AppenderRef:
+            -
+               ref: STDOUT
+            -
+               ref: FILE
+            -
+               ref: ERROR_FILE
